@@ -1,329 +1,493 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sakshi Shah | Portfolio</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Space Grotesk & Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                        mono: ['Space Grotesk', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* High-Tech Subtle Grid Overlay */
-        .tech-grid {
-            background-size: 40px 40px;
-            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-        }
-        /* Custom Neon Glow on Hover */
-        .glow-card:hover {
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
-            border-color: rgba(99, 102, 241, 0.4);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sakshi Shah | Website Developer</title>
+<meta name="description" content="Sakshi Shah is a website developer in Mumbai and an IT consultant and tester at Sharp Financial Services. Business sites, landing pages and portfolios that work on every screen.">
+<meta name="theme-color" content="#FFC21A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --marigold:#FFC21A;
+  --cobalt:#2338E0;
+  --ink:#0E1330;
+  --paper:#F2F4FB;
+  --white:#FFFFFF;
+  --muted:#3B4266;
+  --display:'Bricolage Grotesque',system-ui,sans-serif;
+  --text:'Instrument Sans',system-ui,sans-serif;
+  --gutter:clamp(20px,5vw,56px);
+  --max:1180px;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--text);font-size:1.0625rem;line-height:1.6;color:var(--ink);background:var(--paper);overflow-x:hidden}
+img,svg{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:3px;border-radius:4px}
+.on-dark :focus-visible,.on-cobalt :focus-visible{outline-color:var(--marigold)}
+.wrap{width:100%;max-width:var(--max);margin-inline:auto;padding-inline:var(--gutter)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:var(--white);padding:10px 14px;border-radius:8px;z-index:100}
+.skip:focus{left:8px}
+
+/* type */
+.d{font-family:var(--display);font-weight:800;letter-spacing:-.035em;line-height:.98}
+.h2{font-family:var(--display);font-weight:800;letter-spacing:-.03em;line-height:1.02;font-size:clamp(2rem,5.2vw,3.6rem);max-width:18ch}
+.lede{font-size:clamp(1.05rem,1.6vw,1.25rem);max-width:56ch}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 26px;border-radius:12px;font-weight:600;text-decoration:none;font-size:1rem;border:2px solid var(--ink);transition:transform .15s ease,background .15s ease,color .15s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-solid{background:var(--ink);color:var(--white)}
+.btn-solid:hover{background:var(--cobalt);border-color:var(--cobalt)}
+.btn-line{background:transparent;color:var(--ink)}
+.btn-line:hover{background:var(--ink);color:var(--white)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(242,244,251,.94);backdrop-filter:blur(10px);border-bottom:2px solid var(--ink)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;min-height:64px}
+.brand{font-family:var(--display);font-weight:800;font-size:1.2rem;letter-spacing:-.02em;text-decoration:none}
+.nav-links{display:none;gap:28px;list-style:none;padding:0;font-weight:500}
+.nav-links a{text-decoration:none;padding:6px 2px;border-bottom:2px solid transparent}
+.nav-links a:hover{border-color:var(--cobalt)}
+.nav-cta{display:none;min-height:44px;padding:0 18px;font-size:.95rem}
+.menu-btn{width:46px;height:46px;border-radius:10px;border:2px solid var(--ink);background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--ink)}
+.menu-btn span,.menu-btn span::before,.menu-btn span::after{display:block;width:20px;height:2px;background:currentColor;position:relative;content:"";transition:transform .2s ease}
+.menu-btn span::before{position:absolute;top:-6px}
+.menu-btn span::after{position:absolute;top:6px}
+.menu-btn[aria-expanded="true"] span{background:transparent}
+.menu-btn[aria-expanded="true"] span::before{transform:translateY(6px) rotate(45deg)}
+.menu-btn[aria-expanded="true"] span::after{transform:translateY(-6px) rotate(-45deg)}
+.mobile-menu{display:none;border-top:2px solid var(--ink);background:var(--paper)}
+.mobile-menu.open{display:block}
+.mobile-menu ul{list-style:none;padding:8px var(--gutter) 20px}
+.mobile-menu a{display:block;padding:14px 0;font-family:var(--display);font-weight:700;font-size:1.5rem;text-decoration:none;border-bottom:1px solid rgba(14,19,48,.15)}
+@media(min-width:860px){.nav-links,.nav-cta{display:flex}.menu-btn{display:none}.mobile-menu{display:none!important}}
+
+/* hero */
+.hero{background:var(--marigold);padding-block:clamp(40px,7vw,96px) clamp(48px,7vw,96px);border-bottom:2px solid var(--ink)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:44px}
+.hero-grid>*{min-width:0}
+@media(min-width:980px){.hero-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:center;gap:56px}}
+.status{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:.95rem;background:var(--ink);color:var(--white);padding:8px 16px 8px 12px;border-radius:999px;margin-bottom:26px}
+.status i{width:10px;height:10px;border-radius:50%;background:var(--marigold);display:block}
+.hero h1{font-size:clamp(2.6rem,9vw,3.6rem)}
+@media(min-width:700px){.hero h1{font-size:clamp(3.4rem,7vw,5rem)}}
+@media(min-width:980px){.hero h1{font-size:clamp(3rem,4.6vw,4.4rem)}}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.08em}
+.hero h1 .ln span{display:block;animation:up .85s cubic-bezier(.2,.8,.2,1) both}
+.hero h1 .ln:nth-child(2) span{animation-delay:.12s}
+@keyframes up{from{transform:translateY(105%)}to{transform:none}}
+.hero .lede{margin-top:26px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.hero-cta .btn{flex:1 1 200px}
+@media(min-width:560px){.hero-cta .btn{flex:0 0 auto}}
+
+/* width tester */
+.tester{background:var(--white);border:2px solid var(--ink);border-radius:18px;box-shadow:8px 8px 0 var(--ink);padding:14px}
+@media(min-width:560px){.tester{padding:18px}}
+.tester h2{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
+.tester-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px}
+.tester-top output{white-space:nowrap;font-weight:600;font-variant-numeric:tabular-nums}
+.tester input[type=range]{width:100%;accent-color:var(--cobalt);height:32px;margin:0 0 14px;cursor:ew-resize}
+.stage{min-width:0;background:var(--paper);border-radius:12px;padding:10px;min-height:500px;display:flex;justify-content:center;align-items:flex-start;border:2px dashed rgba(14,19,48,.25)}
+.frame{max-width:100%;background:var(--white);border:2px solid var(--ink);border-radius:12px;overflow:hidden}
+.mini{container-type:inline-size}
+.mini-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:2px solid var(--ink);gap:10px}
+.mini-nav b{font-family:var(--display);font-size:1rem;letter-spacing:-.02em}
+.mini-links{display:none;gap:16px;font-size:.85rem;font-weight:500}
+.mini-burger{font-size:.8rem;font-weight:600;border:2px solid var(--ink);border-radius:8px;padding:3px 10px;background:var(--white)}
+.mini-hero{padding:22px 14px 18px;background:var(--marigold);border-bottom:2px solid var(--ink)}
+.mini-hero p.t{font-family:var(--display);font-weight:800;font-size:1.55rem;line-height:1;letter-spacing:-.03em}
+.mini-hero span.b{display:inline-block;margin-top:14px;background:var(--ink);color:var(--white);font-size:.82rem;font-weight:600;padding:8px 14px;border-radius:8px}
+.mini-grid{display:grid;grid-template-columns:1fr;gap:10px;padding:14px}
+.mini-grid div{background:var(--paper);border:2px solid var(--ink);border-radius:10px;padding:12px;font-size:.85rem;font-weight:600}
+.mini-grid small{display:block;font-weight:400;color:var(--muted)}
+@container (min-width:280px){.mini-grid{grid-template-columns:1fr 1fr}.mini-grid div:last-child{grid-column:1/-1}.mini-hero p.t{font-size:1.7rem}}
+@container (min-width:380px){.mini-grid{grid-template-columns:repeat(3,1fr)}.mini-grid div:last-child{grid-column:auto}.mini-links{display:flex}.mini-burger{display:none}.mini-hero{padding:30px 22px 26px}.mini-hero p.t{font-size:2.3rem}.mini-nav{padding:12px 22px}.mini-grid{padding:18px 22px}}
+.verdict{margin-top:14px;font-weight:600;font-size:.95rem;display:flex;gap:10px;align-items:flex-start}
+.verdict svg{flex:none;margin-top:3px}
+.verdict.bad{color:#B3261E}
+
+/* proof */
+.proof{background:var(--ink);color:var(--white);padding-block:36px}
+.proof ul{list-style:none;padding:0;display:grid;gap:22px}
+@media(min-width:760px){.proof ul{grid-template-columns:repeat(3,1fr);gap:40px}}
+.proof li strong{display:block;font-family:var(--display);font-size:1.3rem;font-weight:700;letter-spacing:-.02em;color:var(--marigold);line-height:1.2}
+.proof li span{opacity:.82;font-size:.98rem}
+
+/* sections */
+.sec{padding-block:clamp(64px,9vw,120px)}
+.sec-head{display:grid;gap:18px;margin-bottom:clamp(32px,5vw,56px)}
+
+/* services */
+.services{display:grid;gap:16px}
+@media(min-width:720px){.services{grid-template-columns:1fr 1fr;gap:20px}}
+.svc{border:2px solid var(--ink);border-radius:26px;padding:clamp(24px,3.5vw,40px);min-height:220px;display:flex;flex-direction:column;justify-content:space-between;gap:36px}
+.svc h3{font-family:var(--display);font-weight:800;font-size:clamp(1.7rem,3.4vw,2.4rem);letter-spacing:-.03em;line-height:1}
+.svc p{font-size:1.05rem;max-width:30ch;margin-top:10px}
+.svc.cobalt{background:var(--cobalt);color:var(--white)}
+.svc.gold{background:var(--marigold);color:var(--ink)}
+.svc svg{width:44px;height:44px}
+@media(min-width:720px){.svc.cobalt:nth-child(1){border-radius:26px 26px 26px 80px}.svc.cobalt:nth-child(4){border-radius:26px 80px 26px 26px}.svc.gold:nth-child(2){border-radius:80px 26px 26px 26px}.svc.gold:nth-child(3){border-radius:26px 26px 80px 26px}}
+
+/* work */
+.work{background:var(--ink);color:var(--white)}
+.work .h2{color:var(--white)}
+.projects{display:grid;gap:22px}
+.proj{background:var(--paper);color:var(--ink);border-radius:22px;padding:clamp(24px,4vw,44px);display:grid;gap:24px}
+@media(min-width:900px){.proj{grid-template-columns:1fr 1.1fr;gap:48px;align-items:start}}
+.proj h3{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,4vw,3rem);letter-spacing:-.035em;line-height:1}
+.proj .kind{margin-top:12px;color:var(--muted);font-weight:500}
+.proj ul{padding-left:1.1em;display:grid;gap:10px}
+.proj li::marker{color:var(--cobalt)}
+.stack{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
+.stack span{font-size:.9rem;font-weight:600;padding:4px 12px;border-radius:999px;background:var(--white);border:2px solid var(--ink)}
+.proj a.src{display:inline-block;margin-top:20px;font-weight:600;text-decoration-thickness:2px;text-underline-offset:4px}
+.proj a.src:hover{color:var(--cobalt)}
+
+/* experience */
+.timeline{list-style:none;padding:0;display:grid;gap:0;border-left:3px solid var(--ink);margin-left:6px}
+.tl{position:relative;padding:0 0 38px 28px;display:grid;gap:6px}
+.tl:last-child{padding-bottom:0}
+.tl::before{content:"";position:absolute;left:-12px;top:6px;width:21px;height:21px;border-radius:50%;background:var(--paper);border:3px solid var(--ink)}
+.tl.now::before{background:var(--marigold)}
+.tl .when{font-weight:600;color:var(--muted)}
+.tl.now .when{color:var(--ink)}
+.tl.now .when b{background:var(--marigold);border:2px solid var(--ink);padding:1px 10px;border-radius:999px;font-weight:600;margin-right:6px}
+.tl h3{font-family:var(--display);font-weight:800;font-size:clamp(1.4rem,2.6vw,1.9rem);letter-spacing:-.025em;line-height:1.1}
+.tl .org{font-weight:600;color:var(--cobalt)}
+.tl ul{padding-left:1.1em;display:grid;gap:6px;margin-top:6px;max-width:60ch}
+@media(min-width:860px){.tl{grid-template-columns:200px minmax(0,1fr);gap:6px 32px;padding-left:40px}.tl .when{grid-column:1;grid-row:1/span 3;padding-top:4px}.tl h3,.tl .org,.tl ul{grid-column:2}.tl ul{margin-top:2px}}
+
+/* skills + education */
+.about{background:var(--white);border-block:2px solid var(--ink)}
+.about-grid{display:grid;gap:56px}
+@media(min-width:900px){.about-grid{grid-template-columns:1.4fr 1fr;gap:80px}}
+.skills{display:grid;gap:26px}
+@media(min-width:640px){.skills{grid-template-columns:1fr 1fr}}
+.skills h3,.edu h3{font-family:var(--display);font-weight:800;font-size:1.25rem;letter-spacing:-.02em;margin-bottom:8px}
+.skills p{color:var(--muted)}
+.skills p b{color:var(--ink);font-weight:600}
+.edu ol{list-style:none;padding:0;display:grid;gap:18px}
+.edu li{padding-bottom:18px;border-bottom:1px solid rgba(14,19,48,.18)}
+.edu li:last-child{border:0;padding:0}
+.edu strong{display:block;font-size:1.1rem}
+.edu span{color:var(--muted)}
+
+/* contact */
+.contact{background:var(--cobalt);color:var(--white);padding-block:clamp(72px,10vw,130px)}
+.contact h2{font-family:var(--display);font-weight:800;letter-spacing:-.04em;line-height:.96;font-size:clamp(2.6rem,8vw,6.2rem);max-width:12ch}
+.contact .lede{margin-top:22px}
+.mail{display:inline-block;margin-top:34px;font-family:var(--display);font-weight:700;letter-spacing:-.025em;font-size:clamp(1.25rem,4.6vw,2.6rem);color:var(--marigold);text-decoration-thickness:3px;text-underline-offset:8px;overflow-wrap:anywhere}
+.mail:hover{color:var(--white)}
+.reach{display:grid;gap:12px;margin-top:40px;list-style:none;padding:0}
+@media(min-width:720px){.reach{grid-template-columns:repeat(3,1fr);gap:20px}}
+.reach a{display:block;border:2px solid var(--white);border-radius:14px;padding:16px 18px;text-decoration:none;font-weight:600;overflow-wrap:anywhere;transition:background .15s ease,color .15s ease}
+.reach a small{display:block;font-weight:400;opacity:.8}
+.reach a:hover{background:var(--white);color:var(--cobalt)}
+footer{background:var(--ink);color:rgba(255,255,255,.75);padding-block:28px;font-size:.92rem}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .hero h1 .ln span{animation:none}
+  .btn,.reach a,.menu-btn span,.menu-btn span::before,.menu-btn span::after{transition:none}
+}
+</style>
 </head>
-<body class="bg-[#0B0F19] text-gray-300 font-sans antialiased selection:bg-indigo-500/30 selection:text-white relative overflow-x-hidden min-h-screen tech-grid">
+<body>
+<a class="skip" href="#main">Skip to content</a>
 
-    <!-- Ambient Sci-Fi Glow Orbs -->
-    <div class="absolute top-[-10%] left-[-10%] -z-10 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[150px] pointer-events-none"></div>
-    <div class="absolute top-[30%] right-[-10%] -z-10 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[130px] pointer-events-none"></div>
-    <div class="absolute bottom-[10%] left-[20%] -z-10 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[160px] pointer-events-none"></div>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">Sakshi Shah</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#about">Skills</a></li>
+    </ul>
+    <a class="btn btn-solid nav-cta" href="#contact">Hire me</a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="Menu"><span></span></button>
+  </div>
+  <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile">
+    <ul>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#about">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full bg-[#0B0F19]/60 backdrop-blur-xl border-b border-white/5 z-50">
-        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#" class="font-mono text-xl font-bold tracking-wider bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent group">
-                Sakshi Shah <span class="text-cyan-400 group-hover:animate-pulse"></span>
-            </a>
-            <div class="hidden md:flex items-center space-x-6 text-xs font-mono tracking-widest uppercase">
-                <a href="#about" class="text-gray-400 hover:text-cyan-400 transition-colors">// About</a>
-                <a href="#skills" class="text-gray-400 hover:text-indigo-400 transition-colors">// Skills</a>
-                <a href="#projects" class="text-gray-400 hover:text-purple-400 transition-colors">// Projects</a>
-                <a href="#experience" class="text-gray-400 hover:text-cyan-400 transition-colors">// Exposure</a>
-                <a href="#contact" class="text-gray-400 hover:text-indigo-400 transition-colors">// Contact</a>
-                
-                <div class="flex items-center gap-3 pl-2 border-l border-white/10">
-                    <a href="https://github.com/sakshishahtech" target="_blank" class="text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 transition-all flex items-center gap-2 font-normal tracking-normal uppercase text-[11px]">
-                        <i class="fa-brands fa-github text-sm"></i> GitHub
-                    </a>
-                    <a href="https://www.linkedin.com/in/sakshishah574" target="_blank" class="text-gray-300 hover:text-white bg-indigo-500/10 hover:bg-indigo-500/20 px-3 py-1.5 rounded-lg border border-indigo-500/20 hover:border-indigo-500/40 transition-all flex items-center gap-2 font-normal tracking-normal uppercase text-[11px]">
-                        <i class="fa-brands fa-linkedin-in text-sm text-indigo-400"></i> LinkedIn
-                    </a>
-                </div>
+<main id="main">
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="status"><i aria-hidden="true"></i>Taking on website projects</p>
+      <h1 class="d">
+        <span class="ln"><span>Websites that work on every screen.</span></span>
+        <span class="ln"><span>Tested before they ship.</span></span>
+      </h1>
+      <p class="lede">I'm Sakshi Shah, a website developer in Mumbai. I build business sites, landing pages and portfolios. I also work as an IT consultant and tester at Sharp Financial Services, so I check my own work the way a tester would.</p>
+      <div class="hero-cta">
+        <a class="btn btn-solid" href="mailto:sakshishahtech@gmail.com?subject=Website%20project">Start a project</a>
+        <a class="btn btn-line" href="./Resume.pdf" download="SakshiShahResume.pdf">Download resume</a>
+      </div>
+    </div>
+
+    <div class="tester" aria-labelledby="testerTitle">
+      <div class="tester-top">
+        <h2 id="testerTitle">Try it: change the screen width</h2>
+        <output id="wOut" for="w">620 px</output>
+      </div>
+      <label class="sr" for="w" style="position:absolute;left:-999px">Screen width in pixels</label>
+      <input type="range" id="w" min="240" max="620" value="620" step="1">
+      <div class="stage" id="stage">
+        <div class="frame" id="frame" style="width:620px">
+          <div class="mini">
+            <div class="mini-nav">
+              <b>Juhu Bakehouse</b>
+              <div class="mini-links"><span>Menu</span><span>Order</span><span>Visit</span></div>
+              <span class="mini-burger">Menu</span>
             </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="min-h-screen flex items-center justify-center pt-24 px-6 text-center relative">
-        <div class="max-w-3xl">
-            <span class="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-[10px] font-mono uppercase tracking-widest text-cyan-400 bg-cyan-500/5 border border-cyan-500/20 rounded-full shadow-[0_0_15px_rgba(34,211,238,0.1)]">
-                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
-                Ready to Engineer Solutions
-            </span>
-            <h1 class="font-mono text-5xl md:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
-                Hi, I'm <br class="sm:hidden"><span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">Sakshi Shah</span>
-            </h1>
-            <p class="text-lg md:text-xl font-medium text-gray-400 mb-8 font-mono tracking-wide">
-                Web Developer & <span class="text-white border-b border-indigo-500/40 pb-1">BSc IT Student</span>
-            </p>
-            <p class="text-base text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed font-light">
-                Detail-oriented developer specializing in creating high-performance, responsive interfaces, robust software logic, and clean architectures.
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 font-mono text-sm tracking-wider">
-                <a href="#projects" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-500 hover:opacity-90 text-white font-medium rounded-xl shadow-lg shadow-indigo-500/20 transition-all transform hover:-translate-y-0.5">
-                    Explore Engine
-                </a>
-                <a href="./Resume.pdf" download="SakshiShahResume.pdf" class="w-full sm:w-auto px-8 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium rounded-xl transition-all flex items-center justify-center gap-2">
-                    <i class="fa-regular fa-file-pdf text-rose-400"></i> Fetch Resume
-                </a>
+            <div class="mini-hero">
+              <p class="t">Fresh bread, baked at 5&nbsp;am.</p>
+              <span class="b">Order now</span>
             </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-28 px-6 max-w-4xl mx-auto">
-        <div class="bg-white/[0.02] backdrop-blur-xl border border-white/5 p-8 md:p-12 rounded-3xl shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-2xl pointer-events-none"></div>
-            
-            <div class="flex items-center gap-3 mb-6">
-                <div class="h-[1px] w-8 bg-cyan-500/50"></div>
-                <h2 class="font-mono text-xs uppercase tracking-widest text-cyan-400">01 . Identity Matrix</h2>
+            <div class="mini-grid">
+              <div>Sourdough<small>Daily</small></div>
+              <div>Pav<small>Soft, warm</small></div>
+              <div>Cakes<small>Made to order</small></div>
             </div>
-            
-            <h3 class="text-2xl font-bold text-white mb-6">About Me</h3>
-            <p class="text-gray-400 leading-relaxed font-light mb-10">
-                Currently pursuing a <strong class="text-white font-medium">Bachelor of Science in Information Technology (BSc IT)</strong> at KC College, HSNC University. I map functional technical logic to beautifully polished modern client-side architectures, creating user journeys that are structurally fast and visually stunning.
-            </p>
-            
-            <div class="border-t border-white/5 pt-8">
-                <h4 class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-6">// Education Timeline</h4>
-                <div class="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[1px] before:bg-white/5">
-                    
-                    <!-- BSc IT -->
-                    <div class="relative pl-8 group">
-                        <div class="absolute left-1.5 top-1.5 w-2 h-2 rounded-full bg-cyan-400 group-hover:scale-125 transition-transform shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1.5 text-sm">
-                            <div>
-                                <p class="font-medium text-white">BSc IT (Third Year)</p>
-                                <p class="text-xs text-gray-500">KC College, HSNC University</p>
-                            </div>
-                            <span class="self-start sm:self-center text-[10px] font-mono text-cyan-400 bg-cyan-500/5 border border-cyan-500/20 px-2.5 py-1 rounded-md">2024 - 2027</span>
-                        </div>
-                    </div>
-                    
-                    <!-- HSC -->
-                    <div class="relative pl-8 group">
-                        <div class="absolute left-1.5 top-1.5 w-2 h-2 rounded-full bg-indigo-400 group-hover:scale-125 transition-transform shadow-[0_0_8px_rgba(129,140,248,0.8)]"></div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1.5 text-sm">
-                            <div>
-                                <p class="font-medium text-white">HSC Commerce <span class="text-indigo-400 text-xs ml-1">(81%)</span></p>
-                                <p class="text-xs text-gray-500">BSGD</p>
-                            </div>
-                            <span class="self-start sm:self-center text-[10px] font-mono text-indigo-400 bg-indigo-500/5 border border-indigo-500/20 px-2.5 py-1 rounded-md">2022 - 2024</span>
-                        </div>
-                    </div>
-                    
-                    <!-- SSC -->
-                    <div class="relative pl-8 group">
-                        <div class="absolute left-1.5 top-1.5 w-2 h-2 rounded-full bg-purple-400 group-hover:scale-125 transition-transform shadow-[0_0_8px_rgba(192,132,252,0.8)]"></div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1.5 text-sm">
-                            <div>
-                                <p class="font-medium text-white">SSC <span class="text-purple-400 text-xs ml-1">(87%)</span></p>
-                                <p class="text-xs text-gray-500">The Bishop's School</p>
-                            </div>
-                            <span class="self-start sm:self-center text-[10px] font-mono text-purple-400 bg-purple-500/5 border border-purple-500/20 px-2.5 py-1 rounded-md">2021 - 2022</span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+          </div>
         </div>
-    </section>
+      </div>
+      <p class="verdict" id="verdict" aria-live="off"></p>
+    </div>
+  </div>
+</section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="py-24 px-6 max-w-4xl mx-auto">
-        <div class="flex items-center justify-center gap-3 mb-4">
-            <div class="h-[1px] w-8 bg-indigo-500/50"></div>
-            <h2 class="font-mono text-xs uppercase tracking-widest text-indigo-400">02 . Skill Stack</h2>
-            <div class="h-[1px] w-8 bg-indigo-500/50"></div>
+<section class="proof on-dark" aria-label="Highlights">
+  <div class="wrap">
+    <ul>
+      <li><strong>IT consultant and tester</strong><span>Sharp Financial Services, ongoing</span></li>
+      <li><strong>Web development intern</strong><span>CodSoft, June 2026</span></li>
+      <li><strong>BSc IT</strong><span>KC College, HSNC University, 2024 to 2027</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec" id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="h2">What I can build for you</h2>
+      <p class="lede">Fast, responsive sites that are easy for your visitors to use.</p>
+    </div>
+    <div class="services">
+      <article class="svc cobalt">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><rect x="5" y="9" width="38" height="30" rx="4"/><path d="M5 18h38"/><circle cx="11" cy="13.5" r="1" fill="currentColor"/><circle cx="16" cy="13.5" r="1" fill="currentColor"/></svg>
+        <div><h3>Business websites</h3><p>Clear, professional sites that earn trust.</p></div>
+      </article>
+      <article class="svc gold">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="9"/><circle cx="24" cy="24" r="2" fill="currentColor"/></svg>
+        <div><h3>Landing pages</h3><p>One page, one goal, built to convert.</p></div>
+      </article>
+      <article class="svc gold">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><rect x="6" y="6" width="16" height="16" rx="3"/><rect x="26" y="6" width="16" height="10" rx="3"/><rect x="6" y="26" width="16" height="16" rx="3" opacity="0"/><rect x="26" y="20" width="16" height="22" rx="3"/><rect x="6" y="26" width="16" height="16" rx="3"/></svg>
+        <div><h3>Portfolio sites</h3><p>Show your work the way it deserves.</p></div>
+      </article>
+      <article class="svc cobalt">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><rect x="15" y="4" width="18" height="40" rx="4"/><path d="M21 38h6"/></svg>
+        <div><h3>Mobile-first design</h3><p>Looks right on every screen size.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec work on-dark" id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="h2">Things I've built</h2>
+    </div>
+    <div class="projects">
+      <article class="proj">
+        <div>
+          <h3>Blood-Link</h3>
+          <p class="kind">Real-time donor logistics platform</p>
+          <div class="stack"><span>PHP</span><span>SQLite</span><span>JavaScript</span><span>HTML5</span><span>CSS3</span></div>
         </div>
-        <h3 class="text-3xl font-bold text-center text-white mb-16">Technical Capabilities</h3>
-        
-        <div class="grid md:grid-cols-2 gap-8">
-            <!-- Tech Stack -->
-            <div class="bg-white/[0.01] backdrop-blur-xl border border-white/5 p-8 rounded-3xl glow-card transition-all duration-300">
-                <h4 class="font-mono text-xs uppercase tracking-wider text-cyan-400 mb-6 flex items-center gap-2.5">
-                    <i class="fa-solid fa-code text-sm"></i> Frameworks & Languages
-                </h4>
-                <div class="flex flex-wrap gap-2.5">
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-cyan-500/10 hover:border-cyan-500/30 transition-colors">HTML5 & CSS3</span>
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-cyan-500/10 hover:border-cyan-500/30 transition-colors">JavaScript (ES6+)</span>
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-cyan-500/10 hover:border-cyan-500/30 transition-colors">PHP</span>
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-cyan-500/10 hover:border-cyan-500/30 transition-colors">Python (Tkinter)</span>
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-cyan-500/10 hover:border-cyan-500/30 transition-colors">Core JAVA basics</span>
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-cyan-500/10 hover:border-cyan-500/30 transition-colors">SQL & SQLite</span>
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-cyan-500/10 hover:border-cyan-500/30 transition-colors">Database Basics</span>
-                </div>
-            </div>
-
-            <!-- Soft Skills -->
-            <div class="bg-white/[0.01] backdrop-blur-xl border border-white/5 p-8 rounded-3xl glow-card transition-all duration-300">
-                <h4 class="font-mono text-xs uppercase tracking-wider text-purple-400 mb-6 flex items-center gap-2.5">
-                    <i class="fa-solid fa-brain text-sm"></i> Operations & Mechanics
-                </h4>
-                <div class="flex flex-wrap gap-2.5">
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-purple-500/10 hover:border-purple-500/30 transition-colors">Problem Solving</span>
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-purple-500/10 hover:border-purple-500/30 transition-colors">Analytical Thinking</span>
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-purple-500/10 hover:border-purple-500/30 transition-colors">Time Management</span>
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-purple-500/10 hover:border-purple-500/30 transition-colors">Adaptable</span>
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-purple-500/10 hover:border-purple-500/30 transition-colors">Attention to Detail</span>
-                    <span class="px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-xl text-xs font-mono text-gray-300 shadow-sm hover:bg-purple-500/10 hover:border-purple-500/30 transition-colors">Team Collaboration</span>
-                </div>
-            </div>
+        <ul>
+          <li>Connects urgent blood requests with donors who are available right now, based on location.</li>
+          <li>Live status updates, so people see what's changed without refreshing.</li>
+          <li>A networked contact system and a fully responsive layout that works on a phone.</li>
+        </ul>
+      </article>
+      <article class="proj">
+        <div>
+          <h3>UTS Replica and Tally Core</h3>
+          <p class="kind">Desktop applications</p>
+          <div class="stack"><span>Python (Tkinter)</span><span>PHP</span><span>SQL</span></div>
         </div>
-    </section>
+        <ul>
+          <li>A Universal Ticketing System with an end-to-end ticket-generation engine.</li>
+          <li>A partial Tally accounting clone that turns commerce workflows into screens and logic.</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="py-24 px-6 max-w-4xl mx-auto">
-        <div class="flex items-center gap-3 mb-6">
-            <div class="h-[1px] w-8 bg-purple-500/50"></div>
-            <h2 class="font-mono text-xs uppercase tracking-widest text-purple-400">03 . Case Studies</h2>
-        </div>
-        
-        <h3 class="text-3xl font-bold text-white mb-2">Featured Repositories</h3>
-        <p class="text-gray-500 font-mono text-xs mb-12">// Dynamic hyperlinked pipelines enabled below.</p>
-        
-        <div class="grid md:grid-cols-2 gap-8">
-            <!-- Project 1 -->
-            <div class="bg-white/[0.01] backdrop-blur-xl border border-white/5 rounded-3xl p-8 transition-all duration-300 glow-card flex flex-col justify-between group">
-                <div>
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-[10px] font-mono uppercase tracking-wider text-cyan-400 bg-cyan-500/5 border border-cyan-500/20 px-2.5 py-1 rounded-md">Logistics Engine</span>
-                        <div class="flex items-center gap-3">
-                            <a href="https://github.com/sakshishahtech" target="_blank" class="text-gray-500 hover:text-white transition-colors" title="View Source"><i class="fa-brands fa-github text-sm"></i></a>
-                            <a href="https://www.linkedin.com/in/sakshishah574" target="_blank" class="text-gray-500 hover:text-indigo-400 transition-colors" title="Share on LinkedIn"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
-                        </div>
-                    </div>
-                    <h4 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">Blood-Link</h4>
-                    <p class="text-gray-400 text-xs font-light leading-relaxed mb-8">
-                        Engineered a location-aware donor logistics micro-platform designed to bridge time-critical medical needs with live availability mappings. Architected optimized lightweight local dynamic query workflows.
-                    </p>
-                </div>
-                <div class="text-[10px] font-mono text-gray-500 border-t border-white/5 pt-4 flex gap-3">
-                    <span class="text-cyan-400/80">PHP</span> <span>SQLite</span> <span>JS Async</span>
-                </div>
-            </div>
+<section class="sec" id="experience">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="h2">Where I've worked and led</h2>
+    </div>
+    <ol class="timeline">
+      <li class="tl now">
+        <p class="when"><b>Now</b>Ongoing</p>
+        <h3>IT consultant and tester</h3>
+        <p class="org">Sharp Financial Services (internship)</p>
+        <ul>
+          <li>Test software to find defects and confirm it works as intended.</li>
+          <li>Advise on IT solutions in a financial services setting.</li>
+        </ul>
+      </li>
+      <li class="tl now">
+        <p class="when"><b>Now</b>Current</p>
+        <h3>Vice President and Editorial Director</h3>
+        <p class="org">Rotaract Club of Northern Suburbs (RCNS)</p>
+        <ul>
+          <li>Vice president of the club.</li>
+          <li>Led editorial work for two consecutive years (2024 to 2026).</li>
+        </ul>
+      </li>
+      <li class="tl">
+        <p class="when">June 2026</p>
+        <h3>Web development intern</h3>
+        <p class="org">CodSoft</p>
+        <ul>
+          <li>Built and improved web features on real-world industry projects.</li>
+          <li>Learned how professional teams plan, build and review together.</li>
+        </ul>
+      </li>
 
-            <!-- Project 2 -->
-            <div class="bg-white/[0.01] backdrop-blur-xl border border-white/5 rounded-3xl p-8 transition-all duration-300 glow-card flex flex-col justify-between group">
-                <div>
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-[10px] font-mono uppercase tracking-wider text-purple-400 bg-purple-500/5 border border-purple-500/20 px-2.5 py-1 rounded-md">System Simulation</span>
-                        <div class="flex items-center gap-3">
-                            <a href="https://github.com/sakshishahtech" target="_blank" class="text-gray-500 hover:text-white transition-colors" title="View Source"><i class="fa-brands fa-github text-sm"></i></a>
-                            <a href="https://www.linkedin.com/in/sakshishah574" target="_blank" class="text-gray-500 hover:text-purple-400 transition-colors" title="Share on LinkedIn"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
-                        </div>
-                    </div>
-                    <h4 class="text-xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">UTS Replica & Tally</h4>
-                    <p class="text-gray-400 text-xs font-light leading-relaxed mb-8">
-                        Translated critical real-world transaction protocols into localized desktop application simulators. Includes a standalone custom dynamic ticket-generation matrix and real-time computation states.
-                    </p>
-                </div>
-                <div class="text-[10px] font-mono text-gray-500 border-t border-white/5 pt-4 flex gap-3">
-                    <span class="text-purple-400/80">Python (Tkinter)</span> <span>SQL Core</span> <span>GUI Architecture</span>
-                </div>
-            </div>
-        </div>
-    </section>
+      <li class="tl">
+        <p class="when">First year of college</p>
+        <h3>Marketing volunteer</h3>
+        <p class="org">Ignite Club</p>
+      </li>
+    </ol>
+  </div>
+</section>
 
-    <!-- Leadership/Co-curricular Section -->
-    <section id="experience" class="py-24 px-6 max-w-4xl mx-auto">
-        <div class="flex items-center justify-center gap-3 mb-4">
-            <div class="h-[1px] w-8 bg-cyan-500/50"></div>
-            <h2 class="font-mono text-xs uppercase tracking-widest text-cyan-400">04 . System Exposure</h2>
-            <div class="h-[1px] w-8 bg-cyan-500/50"></div>
-        </div>
-        <h3 class="text-3xl font-bold text-center text-white mb-16">Ecosystem Engagement</h3>
-        
-        <div class="max-w-2xl mx-auto space-y-4">
-            <!-- Role 1 -->
-            <div class="bg-white/[0.01] backdrop-blur-xl border border-white/5 p-6 rounded-2xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 hover:border-white/10 transition-all group">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
-                        <i class="fa-solid fa-terminal text-xs"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-white text-sm group-hover:text-purple-400 transition-colors">Editorial Director</h4>
-                        <p class="text-xs text-gray-500">Rotaract Club of Northern Suburbs (RCNS)</p>
-                    </div>
-                </div>
-                <span class="text-[10px] font-mono text-gray-400 bg-white/5 px-3 py-1 rounded-lg border border-white/5">2024 - 2026</span>
-            </div>
+<section class="sec about" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <h2 class="h2" style="margin-bottom:36px">What I work with</h2>
+      <div class="skills">
+        <div><h3>Build</h3><p>HTML5, CSS3, JavaScript, PHP, Python, Java (basics), responsive design</p></div>
+        <div><h3>Data</h3><p>SQL, MySQL, SQLite</p></div>
+        <div><h3>Test and advise</h3><p>Software testing, bug reporting, IT consulting</p></div>
+        <div><h3>Tools</h3><p>Git, VS Code, Tkinter, MS Office</p></div>
+        <div style="grid-column:1/-1"><h3>How I work</h3><p>Problem-solving, attention to detail, teamwork, communication, time management, and I learn quickly.</p></div>
+      </div>
+    </div>
+    <div class="edu">
+      <h2 class="h2" style="margin-bottom:36px">Education</h2>
+      <ol>
+        <li><strong>BSc IT, third year</strong><span>KC College, HSNC University, 2024 to 2027</span></li>
+        <li><strong>HSC Commerce, 81%</strong><span>BSGD, 2022 to 2024</span></li>
+        <li><strong>SSC, 87%</strong><span>The Bishop's School, 2021 to 2022</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
 
-            <!-- Role 2 -->
-            <div class="bg-white/[0.01] backdrop-blur-xl border border-white/5 p-6 rounded-2xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 hover:border-white/10 transition-all group">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
-                        <i class="fa-solid fa-tower-broadcast text-xs"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-white text-sm group-hover:text-cyan-400 transition-colors">Marketing Department Volunteer</h4>
-                        <p class="text-xs text-gray-500">Ignite Club</p>
-                    </div>
-                </div>
-                <span class="text-[10px] font-mono text-gray-400 bg-white/5 px-3 py-1 rounded-lg border border-white/5">Undergrad Initiative</span>
-            </div>
-        </div>
-    </section>
+<section class="contact on-cobalt" id="contact">
+  <div class="wrap">
+    <h2>Have a website in mind?</h2>
+    <p class="lede">Tell me what you need and who it's for. I'll reply with how I'd approach it.</p>
+    <a class="mail" href="mailto:sakshishahtech@gmail.com?subject=Website%20project">sakshishahtech@gmail.com</a>
+    <ul class="reach">
+      <li><a href="tel:+918591101138"><small>Phone</small>+91 85911 01138</a></li>
+      <li><a href="https://www.linkedin.com/in/sakshishahtech" target="_blank" rel="noopener"><small>LinkedIn</small>linkedin.com/in/sakshishahtech</a></li>
+      <li><a href="https://github.com/sakshishahtech" target="_blank" rel="noopener"><small>GitHub</small>github.com/sakshishahtech</a></li>
+    </ul>
+  </div>
+</section>
+</main>
 
-    <!-- Contact Section -->
-    <section id="contact" class="py-32 px-6 max-w-2xl mx-auto text-center relative">
-        <div class="absolute inset-0 bg-indigo-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-        
-        <h2 class="font-mono text-xs uppercase tracking-widest text-indigo-400 mb-4">05 . Initialization</h2>
-        <h3 class="text-3xl font-bold text-white mb-4">Establish Connection</h3>
-        <p class="text-gray-400 text-sm font-light mb-10">Open for system deployment, collaborations, or engineering inquiries.</p>
-        
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-6 font-mono text-xs tracking-wider">
-            <a href="mailto:sakshishah574@gmail.com" class="flex items-center space-x-2 text-gray-400 hover:text-cyan-400 transition-colors">
-                <i class="fa-solid fa-envelope text-sm text-cyan-400/70"></i>
-                <span>sakshishah574@gmail.com</span>
-            </a>
-            <span class="hidden sm:inline text-white/10">|</span>
-            <a href="https://github.com/sakshishahtech" target="_blank" class="flex items-center space-x-2 text-gray-400 hover:text-cyan-400 transition-colors">
-                <i class="fa-brands fa-github text-sm text-cyan-400/70"></i>
-                <span>github.com/sakshishahtech</span>
-            </a>
-            <span class="hidden sm:inline text-white/10">|</span>
-            <a href="https://www.linkedin.com/in/sakshishah574" target="_blank" class="flex items-center space-x-2 text-gray-400 hover:text-purple-400 transition-colors">
-                <i class="fa-brands fa-linkedin-in text-sm text-purple-400/70"></i>
-                <span>linkedin.com/in/sakshishah574</span>
-            </a>
-        </div>
-    </section>
+<footer class="on-dark"><div class="wrap">&copy; 2026 Sakshi Shah. Mumbai, India.</div></footer>
 
-    <!-- Footer -->
-    <footer class="border-t border-white/5 py-12 text-center font-mono text-[10px] text-gray-600 tracking-widest">
-        <p>&copy; 2026 SAKSHI SHAH. ALL SYSTEMS OPERATIONAL.</p>
-    </footer>
+<script>
+(function(){
+  // mobile menu
+  var btn=document.getElementById('menuBtn'),menu=document.getElementById('mobileMenu');
+  btn.addEventListener('click',function(){
+    var open=menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open);
+  });
+  menu.addEventListener('click',function(e){
+    if(e.target.tagName==='A'){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}
+  });
 
+  // width tester
+  var range=document.getElementById('w'),out=document.getElementById('wOut'),
+      frame=document.getElementById('frame'),stage=document.getElementById('stage'),
+      verdict=document.getElementById('verdict'),grid=frame.querySelector('.mini-grid');
+  var OK='<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="10" cy="10" r="8.5"/><path d="M6 10.5l3 3 5-6"/></svg>';
+  var BAD='<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="10" cy="10" r="8.5"/><path d="M7 7l6 6M13 7l-6 6"/></svg>';
+
+  function limits(){
+    var cs=getComputedStyle(stage),pad=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight);
+    var avail=Math.floor(stage.clientWidth-pad);
+    var max=Math.max(240,Math.min(620,avail));
+    range.max=max;
+    if(+range.value>max)range.value=max;
+    return max;
+  }
+  function update(){
+    var v=+range.value;
+    frame.style.width=v+'px';
+    out.textContent=v+' px';
+    var cols=getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+    var overflow=frame.scrollWidth>frame.clientWidth+1;
+    verdict.className='verdict'+(overflow?' bad':'');
+    verdict.innerHTML=(overflow?BAD:OK)+'<span>'+(overflow?'Sideways scrolling found at this width.':'Passes at '+v+' px: '+cols+(cols>1?' columns':' column')+', no sideways scrolling.')+'</span>';
+  }
+  range.addEventListener('input',function(){stopDemo();update();});
+  window.addEventListener('resize',function(){limits();update();});
+
+  // one short demo on load, stops as soon as the visitor touches the slider
+  var raf=null,stopped=false;
+  function stopDemo(){stopped=true;if(raf)cancelAnimationFrame(raf);}
+  ['pointerdown','keydown','touchstart'].forEach(function(ev){range.addEventListener(ev,stopDemo,{passive:true});});
+
+  var max=limits();update();
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduce){
+    setTimeout(function(){
+      if(stopped)return;
+      var from=max,to=Math.min(250,max),t0=null,dur=3600;
+      function step(t){
+        if(stopped)return;
+        if(!t0)t0=t;
+        var p=Math.min((t-t0)/dur,1);
+        var k=p<.5?p*2:(1-p)*2;           // down, then back up
+        k=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+        range.value=Math.round(from-(from-to)*k);
+        update();
+        if(p<1)raf=requestAnimationFrame(step);
+      }
+      raf=requestAnimationFrame(step);
+    },900);
+  }
+})();
+</script>
 </body>
 </html>
