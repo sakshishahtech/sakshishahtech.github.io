@@ -99,13 +99,13 @@ a{color:inherit}
 .mini-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:2px solid var(--ink);gap:10px}
 .mini-nav b{font-family:var(--display);font-size:1rem;letter-spacing:-.02em}
 .mini-links{display:none;gap:16px;font-size:.85rem;font-weight:500}
-.mini-burger{font-size:.8rem;font-weight:600;border:2px solid var(--ink);border-radius:8px;padding:3px 10px;background:var(--white)}
+.mini-burger{font-size:.85rem;font-weight:600;border:2px solid var(--ink);border-radius:8px;padding:0 12px;min-height:40px;display:inline-flex;align-items:center;background:var(--white)}
 .mini-hero{padding:22px 14px 18px;background:var(--marigold);border-bottom:2px solid var(--ink)}
 .mini-hero p.t{font-family:var(--display);font-weight:800;font-size:1.55rem;line-height:1;letter-spacing:-.03em}
-.mini-hero span.b{display:inline-block;margin-top:14px;background:var(--ink);color:var(--white);font-size:.82rem;font-weight:600;padding:8px 14px;border-radius:8px}
+.mini-hero span.b{display:inline-flex;align-items:center;margin-top:14px;background:var(--ink);color:var(--white);font-size:.85rem;font-weight:600;padding:0 16px;min-height:40px;border-radius:8px}
 .mini-grid{display:grid;grid-template-columns:1fr;gap:10px;padding:14px}
 .mini-grid div{background:var(--paper);border:2px solid var(--ink);border-radius:10px;padding:12px;font-size:.85rem;font-weight:600}
-.mini-grid small{display:block;font-weight:400;color:var(--muted)}
+.mini-grid small{display:block;font-size:.8rem;font-weight:400;color:var(--muted)}
 @container (min-width:280px){.mini-grid{grid-template-columns:1fr 1fr}.mini-grid div:last-child{grid-column:1/-1}.mini-hero p.t{font-size:1.7rem}}
 @container (min-width:380px){.mini-grid{grid-template-columns:repeat(3,1fr)}.mini-grid div:last-child{grid-column:auto}.mini-links{display:flex}.mini-burger{display:none}.mini-hero{padding:30px 22px 26px}.mini-hero p.t{font-size:2.3rem}.mini-nav{padding:12px 22px}.mini-grid{padding:18px 22px}}
 .verdict{margin-top:14px;font-weight:600;font-size:.95rem;display:flex;gap:10px;align-items:flex-start}
@@ -139,9 +139,11 @@ a{color:inherit}
 .work .h2{color:var(--white)}
 .projects{display:grid;gap:22px}
 .proj{background:var(--paper);color:var(--ink);border-radius:22px;padding:clamp(24px,4vw,44px);display:grid;gap:24px}
-@media(min-width:900px){.proj{grid-template-columns:1fr 1.1fr;gap:48px;align-items:start}}
+@media(min-width:900px){.proj{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:48px;align-items:stretch}}
+.proj ul{margin-top:20px}
 .proj h3{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,4vw,3rem);letter-spacing:-.035em;line-height:1}
 .proj .kind{margin-top:12px;color:var(--muted);font-weight:500}
+.proj>*{min-width:0}
 .proj ul{padding-left:1.1em;display:grid;gap:10px}
 .proj li::marker{color:var(--cobalt)}
 .stack{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px}
@@ -190,6 +192,54 @@ a{color:inherit}
 .reach a small{display:block;font-weight:400;opacity:.8}
 .reach a:hover{background:var(--white);color:var(--cobalt)}
 footer{background:var(--ink);color:rgba(255,255,255,.75);padding-block:28px;font-size:.92rem}
+
+
+/* checks + presets */
+.presets{display:flex;gap:8px;margin:0 0 12px}
+.presets button{flex:1;min-height:40px;border:2px solid var(--ink);background:var(--white);color:var(--ink);border-radius:10px;font:600 .92rem var(--text);cursor:pointer;transition:background .15s ease,color .15s ease}
+.presets button:hover{background:var(--ink);color:var(--white)}
+.checks-sum{margin-top:14px;font-weight:700;font-size:1rem}
+.checks{list-style:none;padding:0;margin-top:8px;display:grid;gap:6px;font-size:.92rem;font-weight:500}
+.checks li{display:flex;gap:8px;align-items:flex-start}
+.checks svg{flex:none;margin-top:3px}
+.checks li.bad{color:#B3261E;font-weight:600}
+
+/* project visuals */
+.viz{position:relative;border:2px solid var(--ink);border-radius:18px;background:var(--white);overflow:hidden;min-height:240px;display:grid;place-items:center}
+.viz .cap{position:absolute;left:12px;top:10px;font-size:.8rem;font-weight:600;background:var(--paper);border:2px solid var(--ink);border-radius:999px;padding:1px 10px}
+.viz svg{display:block;width:100%;height:100%;min-height:240px}
+.ring{transform-box:fill-box;transform-origin:center;animation:ping 3.2s ease-out infinite}
+.ring.r2{animation-delay:1.05s}.ring.r3{animation-delay:2.1s}
+@keyframes ping{from{transform:scale(.15);opacity:.8}to{transform:scale(1);opacity:0}}
+.viz-ticket{padding:46px 18px 22px;background:var(--marigold)}
+.tk{width:100%;max-width:380px;background:var(--white);border:2px solid var(--ink);border-radius:14px;position:relative;box-shadow:6px 6px 0 var(--ink);transform:rotate(-2deg)}
+.tk::before,.tk::after{content:"";position:absolute;top:96px;width:20px;height:20px;border-radius:50%;background:var(--marigold);border:2px solid var(--ink)}
+.tk::before{left:-12px}.tk::after{right:-12px}
+.tk-top{display:flex;justify-content:space-between;gap:10px;padding:14px 16px 10px;font-size:.85rem;font-weight:600}
+.tk-top span{font-variant-numeric:tabular-nums}
+.tk-route{display:flex;align-items:center;gap:12px;padding:6px 16px 20px;border-bottom:2px dashed var(--ink)}
+.tk-route div{flex:0 0 auto}
+.tk-route i{flex:1;height:2px;background:var(--ink);position:relative;min-width:24px}
+.tk-route i::after{content:"";position:absolute;right:-1px;top:-4px;border:5px solid transparent;border-left:8px solid var(--ink);border-right:0}
+.tk small{display:block;font-size:.72rem;font-weight:600;color:var(--muted)}
+.tk strong{font-family:var(--display);font-size:1.5rem;letter-spacing:-.03em;line-height:1.1}
+.tk-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:14px 16px 16px}
+.tk-bottom strong{font-size:1.05rem}
+.bars{width:96px;height:38px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 5px,var(--ink) 5px 6px,transparent 6px 9px,var(--ink) 9px 12px,transparent 12px 14px)}
+@media(prefers-reduced-motion:reduce){.ring{animation:none;opacity:.35;transform:scale(.7)}}
+
+/* services hover */
+.svc{transition:transform .2s ease,box-shadow .2s ease}
+.svc:hover{transform:translateY(-4px);box-shadow:6px 6px 0 var(--ink)}
+
+/* copy + floating cta */
+.copy{margin-top:18px;margin-left:0;min-height:44px;padding:0 18px;border:2px solid var(--white);background:transparent;color:var(--white);border-radius:12px;font:600 .95rem var(--text);cursor:pointer;display:block}
+.copy:hover{background:var(--white);color:var(--cobalt)}
+.float-cta{position:fixed;left:var(--gutter);right:var(--gutter);bottom:14px;z-index:40;display:flex;align-items:center;justify-content:center;min-height:54px;border-radius:14px;background:var(--marigold);color:var(--ink);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);font-weight:700;text-decoration:none;transform:translateY(140%);transition:transform .25s ease}
+.float-cta.show{transform:none}
+@media(min-width:860px){.float-cta{display:none}}
+@media(max-width:859px){footer{padding-bottom:96px}}
+@media(prefers-reduced-motion:reduce){.svc,.float-cta{transition:none}}
 
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -247,6 +297,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.75);padding-block:28px;font
       </div>
       <label class="sr" for="w" style="position:absolute;left:-999px">Screen width in pixels</label>
       <input type="range" id="w" min="240" max="620" value="620" step="1">
+      <div class="presets" role="group" aria-label="Quick widths"><button type="button" data-p="min">Narrow</button><button type="button" data-p="mid">Medium</button><button type="button" data-p="max">Wide</button></div>
       <div class="stage" id="stage">
         <div class="frame" id="frame" style="width:620px">
           <div class="mini">
@@ -267,7 +318,8 @@ footer{background:var(--ink);color:rgba(255,255,255,.75);padding-block:28px;font
           </div>
         </div>
       </div>
-      <p class="verdict" id="verdict" aria-live="off"></p>
+      <p class="checks-sum" id="sum"></p>
+      <ul class="checks" id="checks"></ul>
     </div>
   </div>
 </section>
@@ -319,24 +371,57 @@ footer{background:var(--ink);color:rgba(255,255,255,.75);padding-block:28px;font
         <div>
           <h3>Blood-Link</h3>
           <p class="kind">Real-time donor logistics platform</p>
+          <ul>
+            <li>Connects urgent blood requests with donors who are available right now, based on location.</li>
+            <li>Live status updates, so people see what's changed without refreshing.</li>
+            <li>A networked contact system and a fully responsive layout that works on a phone.</li>
+          </ul>
           <div class="stack"><span>PHP</span><span>SQLite</span><span>JavaScript</span><span>HTML5</span><span>CSS3</span></div>
         </div>
-        <ul>
-          <li>Connects urgent blood requests with donors who are available right now, based on location.</li>
-          <li>Live status updates, so people see what's changed without refreshing.</li>
-          <li>A networked contact system and a fully responsive layout that works on a phone.</li>
-        </ul>
+        <div class="viz" role="img" aria-label="Illustration: an urgent request pin with available donors nearby">
+          <span class="cap">Sample view</span>
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#0E1330" opacity=".2"/></pattern></defs>
+            <rect width="400" height="300" fill="url(#dots)"/>
+            <path d="M-10 210 C90 190 160 240 260 200 S380 170 420 190" stroke="#0E1330" stroke-opacity=".12" stroke-width="14" fill="none"/>
+            <path d="M120 -10 C140 80 110 150 150 320" stroke="#0E1330" stroke-opacity=".12" stroke-width="14" fill="none"/>
+            <circle class="ring" cx="215" cy="150" r="130" fill="none" stroke="#E5384F" stroke-width="3"/>
+            <circle class="ring r2" cx="215" cy="150" r="130" fill="none" stroke="#E5384F" stroke-width="3"/>
+            <circle class="ring r3" cx="215" cy="150" r="130" fill="none" stroke="#E5384F" stroke-width="3"/>
+            <g>
+              <path d="M215 176c-16-20-24-32-24-44a24 24 0 0 1 48 0c0 12-8 24-24 44z" fill="#E5384F" stroke="#0E1330" stroke-width="3"/>
+              <circle cx="215" cy="132" r="8" fill="#fff"/>
+            </g>
+            <g font-family="Instrument Sans,sans-serif" font-weight="600" font-size="13">
+              <circle cx="110" cy="100" r="11" fill="#2338E0" stroke="#0E1330" stroke-width="3"/>
+              <rect x="78" y="66" width="76" height="24" rx="12" fill="#fff" stroke="#0E1330" stroke-width="2"/><text x="116" y="83" text-anchor="middle" fill="#0E1330">Available</text>
+              <circle cx="320" cy="90" r="11" fill="#2338E0" stroke="#0E1330" stroke-width="3"/>
+              <rect x="282" y="56" width="76" height="24" rx="12" fill="#fff" stroke="#0E1330" stroke-width="2"/><text x="320" y="73" text-anchor="middle" fill="#0E1330">Available</text>
+              <circle cx="300" cy="225" r="11" fill="#2338E0" stroke="#0E1330" stroke-width="3"/>
+              <rect x="262" y="246" width="76" height="24" rx="12" fill="#fff" stroke="#0E1330" stroke-width="2"/><text x="300" y="263" text-anchor="middle" fill="#0E1330">Available</text>
+              <rect x="170" y="190" width="90" height="26" rx="13" fill="#0E1330"/><text x="215" y="208" text-anchor="middle" fill="#fff">Urgent</text>
+            </g>
+          </svg>
+        </div>
       </article>
       <article class="proj">
         <div>
           <h3>UTS Replica and Tally Core</h3>
           <p class="kind">Desktop applications</p>
+          <ul>
+            <li>A Universal Ticketing System with an end-to-end ticket-generation engine.</li>
+            <li>A partial Tally accounting clone that turns commerce workflows into screens and logic.</li>
+          </ul>
           <div class="stack"><span>Python (Tkinter)</span><span>PHP</span><span>SQL</span></div>
         </div>
-        <ul>
-          <li>A Universal Ticketing System with an end-to-end ticket-generation engine.</li>
-          <li>A partial Tally accounting clone that turns commerce workflows into screens and logic.</li>
-        </ul>
+        <div class="viz viz-ticket" role="img" aria-label="Illustration: a sample train ticket">
+          <span class="cap">Sample ticket</span>
+          <div class="tk" aria-hidden="true">
+            <div class="tk-top"><b>Universal ticket</b><span>No. 0042 7716</span></div>
+            <div class="tk-route"><div><small>From</small><strong>Dadar</strong></div><i></i><div><small>To</small><strong>Andheri</strong></div></div>
+            <div class="tk-bottom"><div><small>Class</small><strong>Second</strong></div><div class="bars"></div></div>
+          </div>
+        </div>
       </article>
     </div>
   </div>
@@ -413,6 +498,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.75);padding-block:28px;font
     <h2>Have a website in mind?</h2>
     <p class="lede">Tell me what you need and who it's for. I'll reply with how I'd approach it.</p>
     <a class="mail" href="mailto:sakshishahtech@gmail.com?subject=Website%20project">sakshishahtech@gmail.com</a>
+    <button class="copy" id="copyBtn" type="button">Copy email</button>
     <ul class="reach">
       <li><a href="tel:+918591101138"><small>Phone</small>+91 85911 01138</a></li>
       <li><a href="https://www.linkedin.com/in/sakshishahtech" target="_blank" rel="noopener"><small>LinkedIn</small>linkedin.com/in/sakshishahtech</a></li>
@@ -421,6 +507,8 @@ footer{background:var(--ink);color:rgba(255,255,255,.75);padding-block:28px;font
   </div>
 </section>
 </main>
+
+<a class="float-cta" id="floatCta" href="#contact">Start a project</a>
 
 <footer class="on-dark"><div class="wrap">&copy; 2026 Sakshi Shah. Mumbai, India.</div></footer>
 
@@ -439,9 +527,10 @@ footer{background:var(--ink);color:rgba(255,255,255,.75);padding-block:28px;font
   // width tester
   var range=document.getElementById('w'),out=document.getElementById('wOut'),
       frame=document.getElementById('frame'),stage=document.getElementById('stage'),
-      verdict=document.getElementById('verdict'),grid=frame.querySelector('.mini-grid');
-  var OK='<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="10" cy="10" r="8.5"/><path d="M6 10.5l3 3 5-6"/></svg>';
-  var BAD='<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="10" cy="10" r="8.5"/><path d="M7 7l6 6M13 7l-6 6"/></svg>';
+      sum=document.getElementById('sum'),list=document.getElementById('checks'),
+      grid=frame.querySelector('.mini-grid');
+  var OK='<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="10" cy="10" r="8.5"/><path d="M6 10.5l3 3 5-6"/></svg>';
+  var BAD='<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="10" cy="10" r="8.5"/><path d="M7 7l6 6M13 7l-6 6"/></svg>';
 
   function limits(){
     var cs=getComputedStyle(stage),pad=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight);
@@ -451,19 +540,47 @@ footer{background:var(--ink);color:rgba(255,255,255,.75);padding-block:28px;font
     if(+range.value>max)range.value=max;
     return max;
   }
+  function measure(){
+    var overflow=frame.scrollWidth>frame.clientWidth+1;
+    var minFont=999;
+    frame.querySelectorAll('.mini *').forEach(function(el){
+      if(el.offsetParent===null)return;
+      var hasText=Array.prototype.some.call(el.childNodes,function(n){return n.nodeType===3&&n.textContent.trim();});
+      if(hasText)minFont=Math.min(minFont,parseFloat(getComputedStyle(el).fontSize));
+    });
+    var minTap=999;
+    frame.querySelectorAll('.mini-burger,.b').forEach(function(el){
+      if(el.offsetParent===null)return;
+      minTap=Math.min(minTap,el.getBoundingClientRect().height);
+    });
+    return {overflow:overflow,font:minFont,tap:minTap};
+  }
   function update(){
     var v=+range.value;
     frame.style.width=v+'px';
     out.textContent=v+' px';
     var cols=getComputedStyle(grid).gridTemplateColumns.split(' ').length;
-    var overflow=frame.scrollWidth>frame.clientWidth+1;
-    verdict.className='verdict'+(overflow?' bad':'');
-    verdict.innerHTML=(overflow?BAD:OK)+'<span>'+(overflow?'Sideways scrolling found at this width.':'Passes at '+v+' px: '+cols+(cols>1?' columns':' column')+', no sideways scrolling.')+'</span>';
+    var m=measure();
+    var rows=[
+      {ok:!m.overflow,t:m.overflow?'Sideways scrolling found':'No sideways scrolling'},
+      {ok:m.font>=12,t:'Smallest text is '+Math.round(m.font*10)/10+' px'+(m.font>=12?', easy to read':', too small')},
+      {ok:m.tap>=40,t:'Buttons are '+Math.floor(m.tap)+' px tall'+(m.tap>=40?', easy to tap':', too small to tap')}
+    ];
+    var pass=rows.filter(function(r){return r.ok;}).length;
+    sum.textContent=pass+' of 3 checks pass at '+v+' px. Layout: '+cols+(cols>1?' columns.':' column.');
+    list.innerHTML=rows.map(function(r){return '<li class="'+(r.ok?'':'bad')+'">'+(r.ok?OK:BAD)+'<span>'+r.t+'</span></li>';}).join('');
   }
+  function setW(v){stopDemo();range.value=v;update();}
   range.addEventListener('input',function(){stopDemo();update();});
+  document.querySelectorAll('.presets button').forEach(function(b){
+    b.addEventListener('click',function(){
+      var min=+range.min,max=+range.max,k=b.getAttribute('data-p');
+      setW(k==='min'?min:k==='max'?max:Math.round((min+max)/2));
+    });
+  });
   window.addEventListener('resize',function(){limits();update();});
 
-  // one short demo on load, stops as soon as the visitor touches the slider
+  // one short demo on load; stops as soon as the visitor interacts
   var raf=null,stopped=false;
   function stopDemo(){stopped=true;if(raf)cancelAnimationFrame(raf);}
   ['pointerdown','keydown','touchstart'].forEach(function(ev){range.addEventListener(ev,stopDemo,{passive:true});});
@@ -478,7 +595,7 @@ footer{background:var(--ink);color:rgba(255,255,255,.75);padding-block:28px;font
         if(stopped)return;
         if(!t0)t0=t;
         var p=Math.min((t-t0)/dur,1);
-        var k=p<.5?p*2:(1-p)*2;           // down, then back up
+        var k=p<.5?p*2:(1-p)*2;
         k=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
         range.value=Math.round(from-(from-to)*k);
         update();
@@ -486,6 +603,34 @@ footer{background:var(--ink);color:rgba(255,255,255,.75);padding-block:28px;font
       }
       raf=requestAnimationFrame(step);
     },900);
+  }
+
+  // copy email
+  var copyBtn=document.getElementById('copyBtn');
+  copyBtn.addEventListener('click',function(){
+    var email='sakshishahtech@gmail.com';
+    function done(){copyBtn.textContent='Copied';setTimeout(function(){copyBtn.textContent='Copy email';},2000);}
+    function legacy(){
+      var t=document.createElement('textarea');t.value=email;t.setAttribute('readonly','');
+      t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();
+      var ok=false;try{ok=document.execCommand('copy');}catch(e){}
+      document.body.removeChild(t);
+      if(ok)done();else window.prompt('Copy this email:',email);
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(email).then(done,legacy);}
+    else legacy();
+  });
+
+  // floating call to action on phones: hidden over the hero and the contact section
+  var fl=document.getElementById('floatCta'),vis={top:true,contact:false};
+  function sync(){fl.classList.toggle('show',!vis.top&&!vis.contact);}
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){vis[e.target.id==='top'?'top':'contact']=e.isIntersecting;});
+      sync();
+    },{threshold:0.15});
+    io.observe(document.getElementById('top'));
+    io.observe(document.getElementById('contact'));
   }
 })();
 </script>
