@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bug Hunt</title>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+[hidden]{display:none!important}
+body{margin:0}
+:root{color-scheme:light}
+img{max-width:100%}
+/* Layout: score strip on top, a fake staging site as the playfield, room scoreboard underneath. */
+:root{
+  --bg:#F1F2F4; --surface:#FFFFFF; --ink:#12161C; --muted:#586170; --line:#D8DBE1; --wire:#E7E9ED;
+  --yellow:#FFC21A; --on-yellow:#14181F;
+  --bug:#B8301E; --bug-bg:#FCE6E1; --feat:#0A7466; --feat-bg:#D9F2ED;
+  --p0:#E5484D; --p1:#F08A24; --p2:#C9A100; --p3:#2BA84A; --p4:#1FA6C1; --p5:#3E63DD; --p6:#8E4EC6; --p7:#D6409F;
+  --f-display:'Bricolage Grotesque',system-ui,sans-serif;
+  --f-body:'IBM Plex Sans',system-ui,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1116; --surface:#161C24; --ink:#E8ECF1; --muted:#9AA4B2; --line:#28303B; --wire:#1F2630;
+    --bug:#FF8572; --bug-bg:#3B1D18; --feat:#52D6C1; --feat-bg:#11322D;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1116; --surface:#161C24; --ink:#E8ECF1; --muted:#9AA4B2; --line:#28303B; --wire:#1F2630;
+  --bug:#FF8572; --bug-bg:#3B1D18; --feat:#52D6C1; --feat-bg:#11322D;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink); font:15px/1.5 var(--f-body);
+  padding-block:24px 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+main{max-width:760px;margin:0 auto}
+h1,h2{font-family:var(--f-display);margin:0;text-wrap:balance}
+h1{font-size:clamp(2.2rem,7vw,3.2rem);line-height:1.02;letter-spacing:-.02em}
+h2{font-size:1.3rem;line-height:1.2}
+.eyebrow{font:500 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.lead{margin:10px 0 0;color:var(--muted);max-width:56ch}
+.muted{color:var(--muted)}
+header{margin-bottom:20px}
+
+.hud{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.stat .k{display:block;font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stat .v{display:block;font:600 1.6rem/1.2 var(--f-mono);font-variant-numeric:tabular-nums}
+.timebar{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin:10px 0 12px}
+.timebar i{display:block;height:100%;width:100%;background:var(--yellow)}
+
+.arena{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.chrome{display:flex;align-items:center;gap:12px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--bg)}
+.dots{display:flex;gap:6px}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.url{flex:1;min-width:0;font:12px var(--f-mono);color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:3px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.field{position:relative;height:clamp(340px,64vw,460px);overflow:hidden;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.wire i{position:absolute;background:var(--wire);border-radius:6px}
+.wire .w1{top:14px;left:5%;width:22%;height:14px}
+.wire .w2{top:14px;right:5%;width:30%;height:14px}
+.wire .w3{top:52px;left:5%;right:5%;height:34%;border-radius:10px}
+.wire .w4{bottom:16%;left:5%;width:43%;height:14%;border-radius:10px}
+.wire .w5{bottom:16%;right:5%;width:43%;height:14%;border-radius:10px}
+
+.target{
+  position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:8px;
+  margin:0;padding:7px 14px 9px 10px;border-radius:999px;border:2px solid;cursor:pointer;overflow:hidden;
+  font:500 12px var(--f-mono);touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  animation:pop .14s ease-out;
+}
+.target.bug{background:var(--bug-bg);color:var(--bug);border-color:var(--bug)}
+.target.feat{background:var(--feat-bg);color:var(--feat);border-color:var(--feat)}
+.target .emo{font-size:24px;line-height:1}
+.target .lbl{white-space:nowrap}
+.target::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:100%;background:currentColor;transform-origin:left;animation:drain var(--life) linear forwards}
+.target:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(.6);opacity:0}}
+@keyframes drain{to{transform:scaleX(0)}}
+.floatnum{position:absolute;transform:translate(-50%,-50%);font:700 22px var(--f-mono);pointer-events:none;animation:rise .6s ease-out forwards}
+.floatnum.up{color:var(--feat)}
+.floatnum.down{color:var(--bug)}
+@keyframes rise{to{transform:translate(-50%,-190%);opacity:0}}
+
+.overlay{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;background:color-mix(in srgb,var(--surface) 88%,transparent)}
+.ov-in{max-width:440px;display:grid;gap:12px;justify-items:center}
+.ov-text{margin:0;color:var(--muted)}
+.ov-note{margin:0;font:12px var(--f-mono);color:var(--muted);min-height:1.4em}
+.count{font:700 clamp(4rem,16vw,6rem)/1 var(--f-mono);font-variant-numeric:tabular-nums}
+
+.btn{font:600 15px var(--f-body);padding:10px 18px;border-radius:10px;border:2px solid var(--ink);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn:hover:not(:disabled){background:var(--bg)}
+.btn.primary{background:var(--yellow);color:var(--on-yellow);border-color:var(--yellow)}
+.btn.primary:hover:not(:disabled){background:var(--yellow);filter:brightness(.95)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn:focus-visible,input:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+
+.room{margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px}
+.room-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.room p{margin:0}
+.join-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.fg{display:grid;gap:4px;min-width:0}
+.fg label,.lab{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+input{font:500 15px var(--f-body);color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:8px;padding:9px 12px;width:11rem;max-width:100%}
+#codeIn{width:7rem;font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.14em}
+.code-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
+.code{font:700 2.2rem/1.1 var(--f-mono);letter-spacing:.2em}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.conn{font:500 12px var(--f-mono);color:var(--muted)}
+.conn::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);margin-right:6px}
+.conn.on::before{background:var(--feat)}
+.players{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.pl{position:relative;overflow:hidden;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:8px}
+.pl .bar{position:absolute;inset:0 auto 0 0;width:var(--w);background:color-mix(in srgb,var(--yellow) 30%,transparent)}
+.pl>*:not(.bar){position:relative}
+.pl .dot{width:12px;height:12px;border-radius:50%;background:var(--pc)}
+.pl .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.pl .st{font:500 11px var(--f-mono);color:var(--muted);margin-left:8px;text-transform:uppercase;letter-spacing:.06em}
+.pl .sc{font:600 1.1rem var(--f-mono);font-variant-numeric:tabular-nums}
+.pl .rk{font:600 12px var(--f-mono);color:var(--muted);min-width:1.6em;text-align:right}
+.pl.empty{display:block;color:var(--muted);border-style:dashed}
+.pl.me{border-color:var(--ink)}
+.msg{min-height:1.4em;font:12px var(--f-mono);color:var(--muted)}
+footer{margin-top:20px;font-size:13px;color:var(--muted)}
+footer a{color:var(--ink)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (max-width:480px){
+  .stat{padding:8px 10px}
+  .stat .v{font-size:1.35rem}
+}
+@media (prefers-reduced-motion: reduce){
+  .target,.floatnum{animation:none}
+  .target::after{animation:none}
+  .floatnum{opacity:.9}
+}
+</style>
+</head>
+<body>
+
+<main>
+  <header>
+    <p class="eyebrow">QA drill &middot; 20 seconds</p>
+    <h1>Bug Hunt</h1>
+    <p class="lead">Think like a tester. Squash the bugs before they ship, and leave the working features alone.</p>
+  </header>
+
+  <section class="hud" aria-label="Your stats">
+    <div class="stat"><span class="k">Bugs</span><span class="v" id="sBugs">0</span></div>
+    <div class="stat"><span class="k">Score</span><span class="v" id="sScore">0</span></div>
+    <div class="stat"><span class="k">Time</span><span class="v" id="sTime">20</span></div>
+    <div class="stat"><span class="k">Best</span><span class="v" id="sBest">0</span></div>
+  </section>
+  <div class="timebar" aria-hidden="true"><i id="timeFill"></i></div>
+
+  <section class="arena" aria-label="Game area">
+    <div class="chrome" aria-hidden="true">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="url">staging.juhu-bakehouse.test/menu</div>
+    </div>
+    <div class="field" id="field">
+      <div class="wire" aria-hidden="true"><i class="w1"></i><i class="w2"></i><i class="w3"></i><i class="w4"></i><i class="w5"></i></div>
+      <div id="ov" class="overlay" aria-live="polite">
+        <div class="ov-in">
+          <h2 id="ovTitle">Ready to test?</h2>
+          <p id="ovText" class="ov-text">Squash every 🐞 bug. Leave the ✨ features alone: breaking one costs you 2 points. You have 20 seconds.</p>
+          <div id="ovCount" class="count" hidden>3</div>
+          <button id="ovBtn" class="btn primary" type="button">Start solo</button>
+          <p id="ovNote" class="ov-note"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="room" aria-labelledby="roomH">
+    <div class="room-head">
+      <h2 id="roomH">Play with friends</h2>
+      <span id="conn" class="conn" hidden></span>
+    </div>
+
+    <div id="roomOff">
+      <p class="muted">Everyone in a room gets the same bugs at the same moment. Highest score wins.</p>
+      <div class="join-row" style="margin-top:12px">
+        <div class="fg"><label for="nick">Your name</label><input id="nick" maxlength="16" autocomplete="off"></div>
+        <button id="createBtn" class="btn" type="button" disabled>Create room</button>
+      </div>
+      <div class="join-row" style="margin-top:12px">
+        <div class="fg"><label for="codeIn">Room code</label><input id="codeIn" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="K7QX"></div>
+        <button id="joinBtn" class="btn" type="button" disabled>Join room</button>
+      </div>
+    </div>
+
+    <p id="roomNone" class="muted" hidden>Rooms could not load. They need an internet connection to reach the matchmaking service. Solo play still works.</p>
+
+    <div id="roomOn" hidden style="display:grid;gap:12px">
+      <div class="code-row">
+        <div><span class="lab">Room code</span><div id="codeShow" class="code">----</div></div>
+        <div class="actions">
+          <button id="copyBtn" class="btn" type="button">Copy code</button>
+          <button id="leaveBtn" class="btn" type="button">Leave</button>
+        </div>
+      </div>
+      <p class="muted">Friends open this same page, type the code and join. The person who created the room starts each round and needs to keep this page open.</p>
+      <ul id="players" class="players"></ul>
+    </div>
+
+    <p id="roomMsg" class="msg" role="status"></p>
+  </section>
+
+  <footer>
+    Built from the Bug Hunt on <a href="https://sakshishahtech.github.io/" target="_blank" rel="noopener">sakshishahtech.github.io</a>.
+  </footer>
+</main>
+
+<script>
+(function(){
+'use strict';
+var GAME_MS=20000, COUNT_MS=3000;
+var BUGS=["Button does nothing","Text overflows card","Image won’t load","Form won’t submit","Wrong order total","Typo in heading","404 on /menu","Breaks at 400px","Date shows NaN","Double charge"];
+var FEATS=["Dark mode","Search bar","Share button","Live status","Saved filters","Export to CSV","Order tracking","Language switch"];
+var RULES="Squash every 🐞 bug. Leave the ✨ features alone: breaking one costs you 2 points. You have 20 seconds.";
+
+function $(id){return document.getElementById(id)}
+var field=$('field'), ov=$('ov'), ovTitle=$('ovTitle'), ovText=$('ovText'), ovCount=$('ovCount'), ovBtn=$('ovBtn'), ovNote=$('ovNote');
+var elBugs=$('sBugs'), elScore=$('sScore'), elTime=$('sTime'), elBest=$('sBest'), fill=$('timeFill');
+
+var state='idle', schedule=[], nextIdx=0, t0=0, cdStart=0, raf=0, lastCount=-1;
+var live=[], bugs=0, feats=0, shipped=0, best=0;
+try{ best=parseInt(localStorage.getItem('bughunt-best')||'0',10)||0 }catch(e){}
+
+/* ---------- seeded schedule: same seed, same bugs for everyone ---------- */
+function rng(seed){
+  var a=seed>>>0;
+  return function(){
+    a|=0; a=a+0x6D2B79F5|0;
+    var t=Math.imul(a^a>>>15,1|a);
+    t=t+Math.imul(t^t>>>7,61|t)^t;
+    return ((t^t>>>14)>>>0)/4294967296;
+  };
+}
+function build(seed){
+  var r=rng(seed), out=[], t=500;
+  while(t<GAME_MS-900){
+    var p=t/GAME_MS;
+    var isBug=r()<0.64;
+    out.push({t:t, x:r(), y:12+r()*76, bug:isBug, label:(isBug?BUGS:FEATS)[Math.floor(r()*(isBug?BUGS.length:FEATS.length))], life:1900-700*p, done:false});
+    t+=780-330*p+r()*200;
+  }
+  return out;
+}
+function score(){return Math.max(0,bugs-2*feats)}
+function plural(n,w){return n+' '+w+(n===1?'':'s')}
+function ord(n){var s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])}
+
+/* ---------- HUD ---------- */
+function updateHud(remaining){
+  elBugs.textContent=bugs; elScore.textContent=score(); elBest.textContent=best;
+  if(remaining==null){ elTime.textContent=GAME_MS/1000; fill.style.width='100%'; }
+  else { elTime.textContent=Math.max(0,Math.ceil(remaining/1000)); fill.style.width=Math.max(0,remaining/GAME_MS*100)+'%'; }
+}
+
+/* ---------- overlay ---------- */
+function verdict(){
+  if(feats>=3) return 'Regression found';
+  if(shipped===0) return 'Clean release';
+  if(shipped<=3) return 'Release approved';
+  return 'Release blocked';
+}
+function showOverlay(mode){
+  ov.hidden=false;
+  var counting=(mode==='count');
+  ovCount.hidden=!counting; ovTitle.hidden=counting; ovText.hidden=counting; ovBtn.hidden=counting; ovNote.hidden=counting;
+  if(mode==='idle'){ ovTitle.textContent='Ready to test?'; ovText.textContent=RULES; }
+  if(mode==='done'){
+    ovTitle.textContent=verdict();
+    ovText.textContent=plural(bugs,'bug')+' squashed, '+plural(feats,'feature')+' broken, '+plural(shipped,'bug')+' shipped to production. Score: '+score()+'.';
+  }
+  refreshOverlay();
+}
+function refreshOverlay(){
+  if(state!=='idle'&&state!=='done') return;
+  var again=(state==='done'), note='';
+  if(!named){
+    ovBtn.textContent=again?'Play again':'Start solo'; ovBtn.disabled=false;
+  } else {
+    if(canStart()){ ovBtn.textContent=again?'Start next round':'Start round for everyone'; ovBtn.disabled=false; }
+    else { ovBtn.textContent='Waiting for the host'; ovBtn.disabled=true; }
+    var rows=roomRows();
+    if(rows.length){
+      var busy=rows.filter(function(r){return r.state==='playing'||r.state==='countdown'}).length;
+      if(again){
+        if(busy>0) note='Waiting for '+plural(busy,'player')+' still testing.';
+        else { var me=rows.findIndex(function(r){return r.me}); if(me>=0) note='You placed '+ord(me+1)+' of '+rows.length+'.'; }
+      } else {
+        note=plural(rows.length,'player')+' in room '+roomCode+'. Leave the room to practise solo.';
+      }
+    }
+  }
+  ovNote.textContent=note;
+}
+
+/* ---------- game flow ---------- */
+function clearField(){
+  live.forEach(function(e){ if(e.el.parentNode) e.el.remove(); });
+  live=[];
+  var pops=field.querySelectorAll('.floatnum'); for(var i=0;i<pops.length;i++) pops[i].remove();
+}
+function randSeed(){return 1+Math.floor(Math.random()*4e9)}
+function beginCountdown(seed){
+  clearField();
+  bugs=0; feats=0; shipped=0;
+  schedule=build(seed); nextIdx=0; lastCount=-1;
+  state='countdown'; cdStart=performance.now();
+  updateHud(null); syncPresence(); showOverlay('count');
+  cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
+}
+function tick(now){
+  if(state==='countdown'){
+    var left=COUNT_MS-(now-cdStart);
+    if(left<=0){ state='playing'; t0=now; ov.hidden=true; syncPresence(); }
+    else { var n=Math.ceil(left/1000); if(n!==lastCount){ lastCount=n; ovCount.textContent=String(n); } }
+  }
+  if(state==='playing'){
+    var el=now-t0;
+    while(nextIdx<schedule.length && schedule[nextIdx].t<=el){ spawn(schedule[nextIdx],el); nextIdx++; }
+    for(var i=live.length-1;i>=0;i--){
+      var e=live[i];
+      if(el>=e.it.t+e.it.life){ if(e.it.bug&&!e.it.done) shipped++; e.it.done=true; e.el.remove(); live.splice(i,1); }
+    }
+    updateHud(GAME_MS-el);
+    if(el>=GAME_MS){ finish(); return; }
+  }
+  if(state==='countdown'||state==='playing') raf=requestAnimationFrame(tick);
+}
+function spawn(it,el){
+  if(el>it.t+it.life){ if(it.bug) shipped++; it.done=true; return; }
+  var b=document.createElement('button');
+  b.type='button';
+  b.className='target '+(it.bug?'bug':'feat');
+  b.style.setProperty('--life',Math.round(it.life)+'ms');
+  b.setAttribute('aria-label',(it.bug?'Bug: ':'Feature: ')+it.label);
+  var emo=document.createElement('span'); emo.className='emo'; emo.textContent=it.bug?'🐞':'✨';
+  var lbl=document.createElement('span'); lbl.className='lbl'; lbl.textContent=it.label;
+  b.appendChild(emo); b.appendChild(lbl);
+  field.appendChild(b);
+  var fw=field.clientWidth, half=b.offsetWidth/2+6;
+  var cx=Math.min(Math.max(it.x*fw,half),fw-half);
+  b.style.left=cx+'px'; b.style.top=it.y+'%';
+  var entry={it:it,el:b};
+  live.push(entry);
+  b.addEventListener('pointerdown',function(ev){ ev.preventDefault(); hit(entry); });
+  b.addEventListener('keydown',function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); hit(entry); } });
+}
+function hit(entry){
+  if(state!=='playing'||entry.it.done) return;
+  entry.it.done=true;
+  var x=entry.el.offsetLeft, y=entry.el.offsetTop;
+  if(entry.it.bug){ bugs++; pop(x,y,'+1','up'); } else { feats++; pop(x,y,'−2','down'); }
+  entry.el.remove();
+  var i=live.indexOf(entry); if(i>=0) live.splice(i,1);
+  updateHud(GAME_MS-(performance.now()-t0));
+  syncPresence();
+}
+function pop(x,y,text,cls){
+  var p=document.createElement('div');
+  p.className='floatnum '+cls; p.textContent=text;
+  p.style.left=x+'px'; p.style.top=y+'px';
+  field.appendChild(p);
+  setTimeout(function(){ p.remove(); },650);
+}
+function finish(){
+  live.forEach(function(e){ if(e.it.bug&&!e.it.done) shipped++; });
+  clearField();
+  state='done';
+  if(score()>best){ best=score(); try{ localStorage.setItem('bughunt-best',String(best)); }catch(e){} }
+  updateHud(0);
+  syncPresence();
+  showOverlay('done');
+  renderRoom();
+}
+function startPressed(){
+  if(state==='countdown'||state==='playing') return;
+  if(named){
+    if(!canStart()) return;
+    isHost=true;
+    var round={id:1+Math.floor(Math.random()*1e9), seed:randSeed()};
+    handledRound=round.id;
+    named.presence({host:true, round:round});
+    var nm=named;
+    setTimeout(function(){ nm.presence({round:null}).catch(function(){}); },2500);
+    beginCountdown(round.seed);
+  } else {
+    beginCountdown(randSeed());
+  }
+}
+ovBtn.addEventListener('click',startPressed);
+
+/* ---------- rooms ---------- */
+var roomNs=null, named=null, roomCode=null, isHost=false, joinedAt=0, handledRound=0, myColor=0, joining=false, unsubs=[], msgTimer=0;
+var roomOff=$('roomOff'), roomOn=$('roomOn'), roomNone=$('roomNone'), roomMsg=$('roomMsg'), playersEl=$('players'), connEl=$('conn');
+var nickIn=$('nick'), codeIn=$('codeIn'), createBtn=$('createBtn'), joinBtn=$('joinBtn');
+
+function msg(t){
+  roomMsg.textContent=t||'';
+  clearTimeout(msgTimer);
+  if(t) msgTimer=setTimeout(function(){ roomMsg.textContent=''; },4500);
+}
+function cleanName(v){
+  var s=String(v==null?'':v).replace(/[\u0000-\u001f\u007f-\u009f​-‏‪-‮⁠-⁯﻿]/g,'').trim().slice(0,16);
+  return s||'Tester';
+}
+function num(v){return (typeof v==='number'&&isFinite(v))?Math.max(0,Math.min(999,Math.floor(v))):0}
+function colorIdx(v){return (typeof v==='number'&&v>=0&&v<8)?(v|0):0}
+function genCode(){
+  var A='ABCDEFGHJKMNPQRSTUVWXYZ23456789', s='';
+  for(var i=0;i<4;i++) s+=A.charAt(Math.floor(Math.random()*A.length));
+  return s;
+}
+function nick(){
+  var n=cleanName(nickIn.value);
+  try{ localStorage.setItem('bughunt-nick',n); }catch(e){}
+  return n;
+}
+function canStart(){
+  if(!named) return true;
+  return isHost;
+}
+function roomRows(){
+  if(!named) return [];
+  var rows=named.peers().map(function(p){
+    var pr=p.presence||{};
+    return {name:cleanName(pr.name), score:num(pr.score), state:String(pr.state||'idle'), c:colorIdx(pr.c), me:!!p.isMe};
+  });
+  rows.sort(function(a,b){ return b.score-a.score || (a.name<b.name?-1:1); });
+  return rows;
+}
+var STATE_LABEL={idle:'Ready',countdown:'Starting',playing:'Playing',done:'Done'};
+function renderRoom(){
+  if(!named) return;
+  var rows=roomRows();
+  var max=1; rows.forEach(function(r){ if(r.score>max) max=r.score; });
+  var frag=document.createDocumentFragment();
+  rows.slice(0,12).forEach(function(r){
+    var li=document.createElement('li'); li.className='pl'+(r.me?' me':'');
+    var bar=document.createElement('span'); bar.className='bar'; bar.style.setProperty('--w',(r.score/max*100)+'%');
+    var dot=document.createElement('span'); dot.className='dot'; dot.style.setProperty('--pc','var(--p'+r.c+')');
+    var nm=document.createElement('span'); nm.className='nm'; nm.textContent=r.name+(r.me?' (you)':'');
+    var st=document.createElement('span'); st.className='st'; st.textContent=STATE_LABEL[r.state]||'Ready';
+    nm.appendChild(st);
+    var sc=document.createElement('span'); sc.className='sc'; sc.textContent=r.score;
+    li.appendChild(bar); li.appendChild(dot); li.appendChild(nm); li.appendChild(sc);
+    frag.appendChild(li);
+  });
+  playersEl.replaceChildren(frag);
+  refreshOverlay();
+}
+function syncPresence(){
+  if(!named) return;
+  named.presence({state:state, score:score(), bugs:bugs}).catch(function(){});
+}
+function onPeers(ch){
+  var ps=ch.peers;
+  for(var i=0;i<ps.length;i++){
+    var p=ps[i]; if(p.isMe) continue;
+    var rd=p.presence&&p.presence.round;
+    if(rd && typeof rd.id==='number' && typeof rd.seed==='number' && isFinite(rd.seed) && rd.id!==handledRound && (state==='idle'||state==='done')){
+      handledRound=rd.id;
+      beginCountdown(rd.seed>>>0);
+      break;
+    }
+  }
+  renderRoom();
+}
+function unsubAll(){ unsubs.forEach(function(u){ try{u()}catch(e){} }); unsubs=[]; }
+function showOff(){ roomOn.hidden=true; roomOff.hidden=false; connEl.hidden=true; }
+function dropRoom(note){
+  unsubAll();
+  var n=named; named=null; roomCode=null; isHost=false;
+  if(n) n.leave().catch(function(){});
+  showOff();
+  refreshOverlay();
+  if(note) msg(note);
+}
+function enter(code,asHost){
+  if(!roomNs||joining||named) return;
+  joining=true; createBtn.disabled=true; joinBtn.disabled=true; msg('Joining…');
+  (asHost?roomNs.create():roomNs.join(code)).then(function(r){
+    named=r; roomCode=r.code; isHost=asHost; joinedAt=Date.now(); handledRound=0;
+    myColor=Math.floor(Math.random()*8);
+    r.presence({name:nick(), c:myColor, host:asHost, state:state==='done'?'idle':state, score:0, bugs:0}).catch(function(){});
+    unsubs.push(r.onPeers(onPeers,function(){ dropRoom('The host left, so the room closed. Solo play still works.'); }));
+    unsubs.push(r.onConnection(function(c){
+      connEl.hidden=false; connEl.textContent=c?'Live':'Reconnecting'; connEl.className='conn '+(c?'on':'off');
+    }));
+    $('codeShow').textContent=r.code;
+    roomOff.hidden=true; roomOn.hidden=false;
+    msg('');
+    renderRoom();
+    setTimeout(refreshOverlay,1600);
+  },function(e){
+    msg(e&&e.type==='peer-unavailable'?'No room with that code. Check it and try again.':'Could not reach the room. Check your connection and try again.');
+  }).then(function(){
+    joining=false; createBtn.disabled=false; joinBtn.disabled=false;
+  });
+}
+createBtn.addEventListener('click',function(){ enter(genCode(),true); });
+joinBtn.addEventListener('click',function(){
+  var c=codeIn.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(c.length!==4){ msg('Enter the 4-character room code.'); return; }
+  enter(c,false);
+});
+codeIn.addEventListener('keydown',function(ev){ if(ev.key==='Enter') joinBtn.click(); });
+$('leaveBtn').addEventListener('click',function(){ dropRoom(''); });
+$('copyBtn').addEventListener('click',function(){
+  var t=roomCode||'';
+  function fail(){
+    try{ var r=document.createRange(); r.selectNodeContents($('codeShow')); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r); }catch(e){}
+    msg('Code selected. Copy it manually.');
+  }
+  try{ navigator.clipboard.writeText(t).then(function(){ msg('Code copied.'); },fail); }catch(e){ fail(); }
+});
+
+/* ---------- boot ---------- */
+var savedNick=''; try{ savedNick=localStorage.getItem('bughunt-nick')||''; }catch(e){}
+nickIn.value=savedNick||('Tester'+(10+Math.floor(Math.random()*90)));
+updateHud(null);
+showOverlay('idle');
+
+/* ---------- rooms over WebRTC (PeerJS): no account, no server of our own ---------- */
+var KEYS={name:1,c:1,host:1,state:1,score:1,bugs:1,round:1};
+function applyPatch(dst,patch,fromMember){
+  for(var k in patch){
+    if(!Object.prototype.hasOwnProperty.call(patch,k)||!KEYS[k]) continue;
+    if(fromMember&&(k==='host'||k==='round')) continue;
+    var v=patch[k];
+    if(v===null){ delete dst[k]; continue; }
+    if(typeof v==='string') dst[k]=v.slice(0,40);
+    else if(typeof v==='number'&&isFinite(v)) dst[k]=v;
+    else if(typeof v==='boolean') dst[k]=v;
+    else if(k==='round'&&v&&typeof v==='object'&&typeof v.id==='number'&&typeof v.seed==='number') dst[k]={id:v.id,seed:v.seed};
+  }
+}
+function hostId(code){ return 'bughunt-'+code.toLowerCase(); }
+function base(code,peer){
+  var ph=[], ch=[], eh=[], connected=true, dead=false;
+  var o={
+    code:code,
+    onPeers:function(h,e){ ph.push(h); if(e) eh.push(e); return function(){ ph=ph.filter(function(x){return x!==h}); }; },
+    onConnection:function(h){ ch.push(h); setTimeout(function(){ h(connected); },0); return function(){ ch=ch.filter(function(x){return x!==h}); }; },
+    _peers:function(change){ ph.slice().forEach(function(h){ try{h(change)}catch(e){} }); },
+    _conn:function(c){ connected=c; ch.slice().forEach(function(h){ try{h(c)}catch(e){} }); },
+    _fail:function(err){ if(dead) return; dead=true; eh.slice().forEach(function(h){ try{h(err)}catch(e){} }); },
+    leave:function(){ dead=true; ph=[]; ch=[]; eh=[]; try{ peer.destroy(); }catch(e){} return Promise.resolve(); }
+  };
+  peer.on('disconnected',function(){ o._conn(false); try{ peer.reconnect(); }catch(e){} });
+  peer.on('open',function(){ o._conn(true); });
+  return o;
+}
+function hostRoom(code,peer){
+  var o=base(code,peer), members={}, mine={}, cache=[];
+  function list(){
+    var out=[{peer:'host',isMe:true,presence:mine}];
+    Object.keys(members).forEach(function(id){ out.push({peer:id,isMe:false,presence:members[id].presence}); });
+    return out;
+  }
+  function push(){
+    cache=list();
+    var msg={t:'roster',list:cache.map(function(p){ return {id:p.peer,presence:p.presence}; })};
+    Object.keys(members).forEach(function(id){ try{ members[id].conn.send(msg); }catch(e){} });
+    o._peers({peers:cache});
+  }
+  cache=list();
+  peer.on('connection',function(conn){
+    var id=conn.peer;
+    conn.on('open',function(){
+      if(Object.keys(members).length>=11){ conn.close(); return; }
+      members[id]={conn:conn,presence:{}};
+      push();
+    });
+    conn.on('data',function(d){
+      if(d&&d.t==='p'&&d.patch&&typeof d.patch==='object'&&members[id]){ applyPatch(members[id].presence,d.patch,true); push(); }
+    });
+    function gone(){ if(members[id]&&members[id].conn===conn){ delete members[id]; push(); } }
+    conn.on('close',gone); conn.on('error',gone);
+  });
+  o.peers=function(){ return cache; };
+  o.presence=function(p){ applyPatch(mine,p,false); push(); return Promise.resolve(); };
+  return o;
+}
+function clientRoom(code,peer,conn){
+  var o=base(code,peer), cache=[];
+  conn.on('data',function(d){
+    if(d&&d.t==='roster'&&Array.isArray(d.list)){
+      cache=d.list.slice(0,16).map(function(e){
+        var pr={}; applyPatch(pr,(e&&e.presence)||{},false);
+        var id=String(e&&e.id);
+        return {peer:id,isMe:id===peer.id,presence:pr};
+      });
+      o._peers({peers:cache});
+    }
+  });
+  conn.on('close',function(){ o._fail({code:'closed'}); });
+  conn.on('error',function(){ o._fail({code:'closed'}); });
+  o.peers=function(){ return cache; };
+  o.presence=function(p){ try{ if(conn.open) conn.send({t:'p',patch:p}); }catch(e){} return Promise.resolve(); };
+  return o;
+}
+var P2P=null;
+if(window.Peer){
+  P2P={
+    create:function(tries){
+      tries=tries||0;
+      var code=genCode();
+      return new Promise(function(res,rej){
+        var peer=new window.Peer(hostId(code)), done=false, to=0;
+        function bad(err){
+          if(done) return; done=true; clearTimeout(to);
+          try{ peer.destroy(); }catch(x){}
+          if(err&&err.type==='unavailable-id'&&tries<4) P2P.create(tries+1).then(res,rej);
+          else rej(err||{type:'error'});
+        }
+        to=setTimeout(function(){ bad({type:'timeout'}); },10000);
+        peer.on('error',bad);
+        peer.on('open',function(){ if(done) return; done=true; clearTimeout(to); res(hostRoom(code,peer)); });
+      });
+    },
+    join:function(code){
+      return new Promise(function(res,rej){
+        var peer=new window.Peer(), done=false, to=0;
+        function bad(err){
+          if(done) return; done=true; clearTimeout(to);
+          try{ peer.destroy(); }catch(x){}
+          rej(err||{type:'error'});
+        }
+        to=setTimeout(function(){ bad({type:'timeout'}); },10000);
+        peer.on('error',bad);
+        peer.on('open',function(){
+          var conn=peer.connect(hostId(code),{reliable:true});
+          conn.on('open',function(){ if(done) return; done=true; clearTimeout(to); res(clientRoom(code,peer,conn)); });
+          conn.on('error',bad);
+        });
+      });
+    }
+  };
+}
+
+/* ---------- boot ---------- */
+roomNs=P2P;
+if(roomNs){ createBtn.disabled=false; joinBtn.disabled=false; }
+else { roomOff.hidden=true; roomNone.hidden=false; }
+})();
+</script>
+</body>
+</html>
